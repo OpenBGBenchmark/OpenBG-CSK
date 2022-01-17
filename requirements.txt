@@ -1,0 +1,4 @@
+botocore==1.8.42
+boto3
+regex
+transformers
