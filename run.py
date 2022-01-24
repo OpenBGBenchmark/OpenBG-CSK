@@ -5,7 +5,7 @@ import numpy as np
 from train_eval import train, test
 from bert import Model, Config
 import argparse
-from utils import build_dataset, build_iterator, get_time_dif, load_dataset, load_online_data, gettoken
+from utils import build_dataset, build_iterator, get_time_dif, load_dataset, gettoken
 from torch.utils.data import TensorDataset, DataLoader
 from transformers import BertForMaskedLM, BertTokenizer, BertConfig
 import torch.distributed as dist
@@ -14,8 +14,8 @@ import torch
 import oss2
 
 parser = argparse.ArgumentParser(description='Chinese Text Classification')
-parser.add_argument("--local_rank", type=int, default=-1, help="Local rank passed from distributed launcher.",)
-args = parser.parse_args()
+# parser.add_argument("--local_rank", type=int, default=-1, help="Local rank passed from distributed launcher.",)
+# args = parser.parse_args()
 
 
 def train_entry():
@@ -25,13 +25,14 @@ def train_entry():
     dev_data = load_dataset(config.dev_path, config)
     test_data = load_dataset(config.test_path, config)
     # print(dev_data)
-    train_sampler = torch.utils.data.distributed.DistributedSampler(
-        train_data,
-        shuffle=True)
+    # train_sampler = torch.utils.data.distributed.DistributedSampler(
+    #     train_data,
+    #     shuffle=True)
     train_iter = DataLoader(
         train_data,
+        shuffle=True,
         batch_size=config.batch_size,
-        sampler=train_sampler,
+        # sampler=train_sampler,
         num_workers=config.num_workers,
         drop_last=True)
     dev_iter = DataLoader(dev_data, shuffle=False, batch_size=config.batch_size,
@@ -46,7 +47,7 @@ def train_entry():
     train(config, model, train_iter, dev_iter, test_iter)
 
 
-def test_oss():
+def test_entry():
     # test_data = load_online_data(config.predict_table, config)
     test_data = load_dataset(config.test_path, config)
     model = Model(config).to(config.device)
@@ -98,7 +99,7 @@ def acc(logit, labels, b):
 
 if __name__ == '__main__':
     dataset = 'data'  # 数据集
-    mode = "online"
+    mode = "offline"
     config = Config(dataset, mode)
 
     np.random.seed(1)
@@ -108,7 +109,7 @@ if __name__ == '__main__':
 
     test = 0
     if test:
-        test_oss()
+        test_entry()
     else:
         train_entry()
 

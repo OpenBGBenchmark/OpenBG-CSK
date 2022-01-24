@@ -51,15 +51,7 @@ def build_iterator(dataset, config, istrain):
     labels = torch.FloatTensor([temp[1] for temp in dataset])
     train_dataset = TensorDataset(sent, labels)
     if istrain:
-        train_sampler = torch.utils.data.distributed.DistributedSampler(
-            train_dataset,
-            shuffle=True)
-        train_loader = DataLoader(
-            train_dataset,
-            batch_size=config.batch_size,
-            sampler=train_sampler,
-            num_workers=config.num_workers,
-            drop_last=True)
+        train_loader = DataLoader(dataset, shuffle=True, batch_size=config.batch_size, num_workers=config.num_workers, drop_last=True)
     else:
         train_loader = DataLoader(train_dataset, shuffle=False, batch_size=config.batch_size, num_workers=config.num_workers, drop_last=True)
     return train_loader

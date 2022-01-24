@@ -19,9 +19,13 @@ class Config(object):
         self.train_path = "data/train.csv"  # 训练集
         self.dev_path = 'data/dev.csv'  # 验证集
         self.test_path = 'data/test.csv'  # 测试集
-        self.bert_path = 'data/roberta-raw/'
+        self.bert_path = 'data/roberta/'
         self.save_path = 'data/output/'
-        self.device = "cuda"
+        if mode == "online":
+            self.device = "cuda"
+        else:
+            self.device = "cpu"
+
         # self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')   # 设备
         self.num_workers = 4
         self.local_rank = -1
