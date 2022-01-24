@@ -1,9 +1,9 @@
 # AliOpenKG-BSEE
 # Usage
 ## Experiments
-To reproduce the experiments in the paper, run 
+To reproduce the experiments, run 
 `python run.py` 
-to run. F1 score and the detailed results will be printed.
+to run. F1 score, accuracy and the detailed results will be printed.
 
 
 ## Detailed Results
