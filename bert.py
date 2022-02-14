@@ -11,16 +11,17 @@ import torch.nn.functional as F
 class Config(object):
 
     """配置参数"""
-    def __init__(self, dataset, mode):
+    def __init__(self, mode, args):
         self.model_name = 'bert'
         self.mode = mode
         self.rank = -1
         self.local_rank = -1
-        self.train_path = "data/train.csv"  # 训练集
-        self.dev_path = 'data/dev.csv'  # 验证集
-        self.test_path = 'data/test.csv'  # 测试集
-        self.bert_path = 'data/roberta/'
-        self.save_path = 'data/output/'
+        self.train_path = args.data_dir + '/dev.tsv'  # 训练集
+        self.dev_path = args.data_dir + '/dev.tsv'  # 验证集
+        self.test_path = args.data_dir + '/test.tsv'  # 测试集
+        self.save_path = args.output_dir  # 模型训练结果
+        self.predict_path = args.predict_path
+        self.bert_path = args.model_dir
         if mode == "online":
             self.device = "cuda"
         else:
@@ -29,18 +30,15 @@ class Config(object):
         # self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')   # 设备
         self.num_workers = 4
         self.local_rank = -1
-        self.require_improvement = 1000                                 # 若超过1000batch效果还没提升，则提前结束训练
         self.num_classes = 2                         # 类别数
-        self.num_epochs = 10                                            # epoch数
-        self.batch_size = 8                                           # mini-batch大小
-        self.learning_rate = 1e-5                                       # 学习率
-        self.weight_decay = 0.01
-        self.dropout = 0.1
+        self.num_epochs = args.epochs                                            # epoch数
+        self.batch_size = args.batch_size                                           # mini-batch大小
+        self.learning_rate = args.learning_rate                                     # 学习率
+        self.weight_decay = args.weight_decay
+        self.dropout = args.dropout
         self.tokenizer = BertTokenizer.from_pretrained(self.bert_path, do_lower_case=True)
-        self.hidden_size = 768
-        self.tagsize = 7
-        self.max_length = 256
-        self.adam_epsilon = 1e-8
+        self.hidden_size = args.hidden_size
+        self.max_length = args.max_length
 
 
 class Model(nn.Module):

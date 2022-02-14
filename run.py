@@ -13,9 +13,25 @@ from io import BytesIO
 import torch
 import oss2
 
-parser = argparse.ArgumentParser(description='Chinese Text Classification')
-# parser.add_argument("--local_rank", type=int, default=-1, help="Local rank passed from distributed launcher.",)
-# args = parser.parse_args()
+parser = argparse.ArgumentParser(description='Salient triple classification')
+parser.add_argument("--do_train", type=bool, default=True, help="Whether to run training.",)
+
+parser.add_argument("--data_dir", default="data", type=str, help="The task data directory.")
+parser.add_argument("--predict_path", default="data/", type=str, help="The task data directory.")
+parser.add_argument("--model_dir", default="bert_pretrain/", type=str, help="The directory of pretrained models")
+parser.add_argument("--output_dir", default='output/save_dict/', type=str, help="The path of result data and models to be saved.")
+# models param
+parser.add_argument("--max_length", default=256, type=int, help="the max length of sentence.")
+parser.add_argument("--batch_size", default=8, type=int, help="Batch size for training.")
+parser.add_argument("--learning_rate", default=1e-5, type=float, help="The initial learning rate for Adam.")
+parser.add_argument("--weight_decay", default=0.01, type=float, help="Weight decay if we apply some.")
+parser.add_argument("--dropout", default=0.1, type=float, help="Drop out rate")
+parser.add_argument("--epochs", default=10, type=int, help="Total number of training epochs to perform.")
+parser.add_argument('--save_steps', type=int, default=1000, help="Save checkpoint every X updates steps.")
+parser.add_argument('--seed', type=int, default=1, help="random seed for initialization")
+parser.add_argument('--hidden_size', type=int, default=768,  help="random seed for initialization")
+
+args = parser.parse_args()
 
 
 def train_entry():
@@ -100,15 +116,14 @@ def acc(logit, labels, b):
 if __name__ == '__main__':
     dataset = 'data'  # 数据集
     mode = "offline"
-    config = Config(dataset, mode)
+    config = Config(mode, args)
 
-    np.random.seed(1)
-    torch.manual_seed(1)
-    torch.cuda.manual_seed_all(1)
-    torch.backends.cudnn.deterministic = True  # 保证每次结果一样
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
+    torch.backends.cudnn.deterministic = True
 
-    test = 0
-    if test:
+    if not args.do_train:
         test_entry()
     else:
         train_entry()
