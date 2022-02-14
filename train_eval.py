@@ -24,7 +24,7 @@ def train(config, model, train_iter, dev_iter, test_iter):
         print('Epoch [{}/{}]'.format(epoch + 1, config.num_epochs))
         for i, batches in enumerate(train_iter):
             model.zero_grad()
-            sent, _, _, labels, _ = batches
+            sent, _, _, labels = batches
             input_ids, attention_mask, type_ids, position_ids = gettoken(config,sent)
             input_ids, attention_mask, type_ids, labels = \
                 input_ids.to(config.device), attention_mask.to(config.device), type_ids.to(config.device), labels.to(config.device)
