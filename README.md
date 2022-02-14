@@ -73,7 +73,7 @@ We evaluate the several models on the experiment dataset. We use KG-BERT as the 
 | [BERT-base](https://huggingface.co/bert-base-chinese)          | 50.6 | 56.8 |
 | [RoBERTa-wwm-ext-base](https://huggingface.co/hfl/chinese-roberta-wwm-ext)| 52.1 | 53.2|
 
-KG-BERT takes texts of h, r, t as input of bidirectional encoder such as BERT and computes scoring function of the triple with language model. In specific, the input of model is the concatenation of h, r, t, as [CLS] h [SEP] r [SEP] t [SEP]. The final hidden state C corresponding to [CLS] and the classification layer weights W are used to calculate the triple score.
+KG-BERT takes texts of h, r, t as input of bidirectional encoder such as BERT and computes scoring function of the triple with language model. In specific, the input of model is the concatenation of h, r, t, as [CLS] h [SEP] r [SEP] t [SEP]. The final hidden state C corresponding to [CLS] and the classification layer weights W are used to calculate the triple score.
 
 We list hyper-parameters during the baseline experiments.
 
