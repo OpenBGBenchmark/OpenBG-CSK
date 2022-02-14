@@ -35,7 +35,7 @@ python run.py \
 
 #### Inference & generation of results
 
-Running shell files: `run.sh predict`, and the contents of shell files are as follows:
+Running shell files: `bash run.sh predict`, and the contents of shell files are as follows:
 ```shell
 DATA_DIR="data"
 
