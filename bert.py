@@ -1,34 +1,23 @@
 # coding: UTF-8
 import torch
 import torch.nn as nn
-# from pytorch_pretrained_bert import BertModel, BertTokenizer
 from transformers import BertModel, BertTokenizer, BertPreTrainedModel, BertForMaskedLM
-from torch.autograd import Variable
-from torch.nn import CrossEntropyLoss, BCEWithLogitsLoss
-import torch.nn.functional as F
 
 
 class Config(object):
 
     """配置参数"""
-    def __init__(self, mode, args):
+    def __init__(self, args):
         self.model_name = 'bert'
-        self.mode = mode
         self.rank = -1
         self.local_rank = -1
-        self.train_path = args.data_dir + '/dev.tsv'  # 训练集
-        self.dev_path = args.data_dir + '/dev.tsv'  # 验证集
-        self.test_path = args.data_dir + '/test.tsv'  # 测试集
+        self.train_path = args.data_dir + '/train_triple.jsonl'  # 训练集
+        self.test_path = args.data_dir + '/dev_triple.jsonl'  # 测试集
         self.save_path = args.output_dir  # 模型训练结果
-        self.predict_path = args.predict_path
         self.bert_path = args.model_dir
-        if mode == "online":
-            self.device = "cuda"
-        else:
-            self.device = "cpu"
-
-        # self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')   # 设备
-        self.num_workers = 4
+        self.test_batch = args.test_batch
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')   # 设备
+        self.num_workers = 1
         self.local_rank = -1
         self.num_classes = 2                         # 类别数
         self.num_epochs = args.epochs                                            # epoch数
@@ -49,15 +38,12 @@ class Model(nn.Module):
         self.dropout = nn.Dropout(config.dropout)
         self.dense_1 = nn.Linear(config.hidden_size, 1)
 
-    def forward(self, input_ids, attention_mask, type_ids, position_ids, labels):
+    def forward(self, input_ids, attention_mask, type_ids, position_ids):
         outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=type_ids, position_ids=position_ids)
         sequence_output = outputs[0]
         sequence_output = self.dropout(sequence_output)
-
-        # [batch,hidden]
         procuct_ouput = torch.mean(sequence_output, 1)
         x = self.dense_1(procuct_ouput)
         x = torch.sigmoid(x).squeeze(-1)
-        loss = F.binary_cross_entropy(x, labels.float(), reduction='sum')
-        return loss, x
+        return x
 

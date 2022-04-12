@@ -7,19 +7,9 @@ import time, os
 from datetime import timedelta
 from transformers import BertTokenizer
 from torch.utils.data import TensorDataset, DataLoader
+import json
 
 PAD, CLS, SEP = '[PAD]', '[CLS]', '[SEP]'
-sepa, sepb, sepc = '[unused1]', '[unused2]', '[unused3]'
-
-
-def get_segment_ids(tokenized_sent):
-    segments_ids = []
-    segment = 0
-    for word in tokenized_sent:
-        segments_ids.append(segment)
-        if word == '[SEP]':
-            segment += 1
-    return segments_ids
 
 
 def load_dataset(path, config):
@@ -29,13 +19,17 @@ def load_dataset(path, config):
             lin = line.strip()
             if not lin:
                 continue
-            if (len(lin.split('\t'))) >= 3:
-                t1, t2, label = lin.split('\t')[:3]
-                t1 = t1.replace(' ', '')
-                t2 = t2.replace(' ', '')
-                r = "适用"
-                raw_sent = '[SEP]'.join([t1, r, t2])
-                contents.append([raw_sent, t1, t2, int(label)])
+            line_dict = json.loads(lin)
+            subject = line_dict["subject"]
+            object = line_dict["object"]
+            predicate = line_dict["predicate"]
+            triple_id = line_dict["triple_id"]
+            raw_sent = SEP.join([subject, predicate, object])
+            if "salience" in line_dict.keys():
+                salience = line_dict["salience"]
+                contents.append([raw_sent, triple_id, int(salience)])
+            else:
+                contents.append([raw_sent, triple_id, 0])
     return contents
 
 
@@ -51,9 +45,11 @@ def build_iterator(dataset, config, istrain):
     labels = torch.FloatTensor([temp[1] for temp in dataset])
     train_dataset = TensorDataset(sent, labels)
     if istrain:
-        train_loader = DataLoader(dataset, shuffle=True, batch_size=config.batch_size, num_workers=config.num_workers, drop_last=True)
+        train_loader = DataLoader(dataset, shuffle=True, batch_size=config.batch_size, num_workers=config.num_workers,
+                                  drop_last=True)
     else:
-        train_loader = DataLoader(train_dataset, shuffle=False, batch_size=config.batch_size, num_workers=config.num_workers, drop_last=True)
+        train_loader = DataLoader(train_dataset, shuffle=False, batch_size=config.batch_size,
+                                  num_workers=config.num_workers, drop_last=True)
     return train_loader
 
 
@@ -79,4 +75,4 @@ def gettoken(config, sent):
 
 
 if __name__ == "__main__":
-   print("")
+    print("")
