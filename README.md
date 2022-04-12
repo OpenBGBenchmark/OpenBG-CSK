@@ -1,4 +1,4 @@
-# AliOpenKG-BSEE
+# OpenBG-CSK
 # Usage
 ## Experiments
 To reproduce the experiments, run 
