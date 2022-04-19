@@ -70,10 +70,10 @@ def evaluate(config, model, data_iter, test=True):
                 grounds.append(g.item())
                 sents.append(s)
     print("test set size:", len(grounds))
-    accuracy = metrics.accuracy_score(all_bires, grounds)
-    p = metrics.precision_score(all_bires, grounds, zero_division=0)
-    r = metrics.recall_score(all_bires, grounds, zero_division=0)
-    f1 = metrics.f1_score(all_bires, grounds, zero_division=0)
+    accuracy = metrics.accuracy_score(grounds, all_bires)
+    p = metrics.precision_score(grounds, all_bires, zero_division=0)
+    r = metrics.recall_score(grounds, all_bires, zero_division=0)
+    f1 = metrics.f1_score(grounds, all_bires, zero_division=0)
     print("f1:{},p:{},r,{}, accuracy:{}".format(f1, p, r, accuracy))
     return f1, pmi, loss_total / len(data_iter), predicts, grounds, sents
 
