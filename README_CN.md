@@ -76,7 +76,7 @@ python run.py \
 | [RoBERTa-wwm-ext-base](https://huggingface.co/hfl/chinese-roberta-wwm-ext)| 56.9 | 57.2|
 
 KG-BERT将 头实体h，关系r，尾实体t 的文本作为双向编码器（例如bert）的输入，并且使用语言模型计算该三元组的得分。
-具体而言，模型的输入是以下的格式，将h, r, t 拼接成 [CLS] h [SEP] r [SEP] t [SEP] 的格式。最终使用 权重W 对应的分类起对 [CLS] 相对的输出结果进行打分。
+具体而言，模型的输入是以下的格式，将h, r, t 拼接成 [CLS] h [SEP] r [SEP] t [SEP] 的格式。最终使用 权重W 对应的分类器对 [CLS] 相对的输出结果进行打分。
 
 我们列出了在基线实验期间的超参数如下：
 
