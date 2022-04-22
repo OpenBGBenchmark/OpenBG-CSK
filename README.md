@@ -1,3 +1,7 @@
+<p align="left">
+    <b> English | <a href="https://github.com/OpenBGBenchmark/OpenBG-CSK/blob/master/README_CN.md">简体中文</a> </b>
+</p>
+
 # OpenBG-CSK
 # Usage
 ## Experiments
