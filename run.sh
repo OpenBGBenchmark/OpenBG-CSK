@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 DATA_DIR="data"
 
-MODEL_DIR="bert_pretrain"
+MODEL_DIR="bert-base-chinese"
 OUTPUT_DIR="output/save_dict"
 PREDICT_DIR="data/"
 MAX_LENGTH=128
@@ -13,7 +13,6 @@ if [ $# == 0 ]; then
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
     --output_dir=${OUTPUT_DIR} \
-    --predict_path=${PREDICT_DIR} \
     --do_train=True \
     --max_length=${MAX_LENGTH} \
     --batch_size=16 \
@@ -25,7 +24,6 @@ elif [ $1 == "predict" ]; then
       --data_dir=${DATA_DIR} \
       --model_dir=${MODEL_DIR} \
       --output_dir=${OUTPUT_DIR} \
-      --predict_path=${PREDICT_DIR} \
       --do_train=False \
       --max_length=${MAX_LENGTH} \
       --batch_size=16 \
