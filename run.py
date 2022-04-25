@@ -61,7 +61,7 @@ def test_entry():
     test_data = load_dataset(config.test_path, config)
     model = Model(config).to(config.device)
 
-    model.load_state_dict(torch.load(config.save_path+"/model.ckpt"))
+    model.load_state_dict(torch.load(config.save_path+"model.ckpt"))
     model.eval()
     loader = DataLoader(test_data, shuffle=False, batch_size=config.batch_size)
     predicts = []
