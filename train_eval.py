@@ -16,7 +16,7 @@ def train(config, model, train_iter, dev_iter, test_iter):
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
 
     total_batch = 0  # 记录进行到多少batch
-    dev_best_loss = 1000
+    dev_best_loss = 1e12
     model.train()
     for epoch in range(config.num_epochs):
         print('Epoch [{}/{}]'.format(epoch + 1, config.num_epochs))
@@ -32,7 +32,7 @@ def train(config, model, train_iter, dev_iter, test_iter):
             loss.backward()
             optimizer.step()
             total_batch += 1
-            if i % config.test_batch == 1:
+            if total_batch % config.test_batch == 1:
                 time_dif = get_time_dif(start_time)
                 print("test:")
                 f1, _, dev_loss, predict, ground, sents = evaluate(config, model, dev_iter, test=False)

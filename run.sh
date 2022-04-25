@@ -15,7 +15,8 @@ if [ $# == 0 ]; then
     --output_dir=${OUTPUT_DIR} \
     --do_train=True \
     --max_length=${MAX_LENGTH} \
-    --batch_size=16 \
+    --batch_size=4 \
+    --test_batch=2
     --learning_rate=1e-5 \
     --epochs=10 \
     --seed=2021
