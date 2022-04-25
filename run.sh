@@ -2,7 +2,7 @@
 DATA_DIR="data"
 
 MODEL_DIR="bert-base-chinese"
-OUTPUT_DIR="output/save_dict"
+OUTPUT_DIR="output/save_dict/"
 PREDICT_DIR="data/"
 MAX_LENGTH=128
 
