@@ -27,7 +27,6 @@ python run.py \
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
     --output_dir=${OUTPUT_DIR} \
-    --predict_path=${PREDICT_DIR} \
     --do_train=True \
     --max_length=${MAX_LENGTH} \
     --batch_size=16 \
@@ -52,7 +51,6 @@ python run.py \
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
     --output_dir=${OUTPUT_DIR} \
-    --predict_path=${PREDICT_DIR} \
     --do_train=False \
     --max_length=${MAX_LENGTH} \
     --batch_size=16 \
