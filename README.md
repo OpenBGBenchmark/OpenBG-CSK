@@ -19,7 +19,7 @@ Running shell files: `bash run.sh`, and the contents of shell files are as follo
 DATA_DIR="data"
 
 MODEL_DIR="bert-base-chinese"
-OUTPUT_DIR="output/save_dict"
+OUTPUT_DIR="output/save_dict/"
 PREDICT_DIR="data/"
 MAX_LENGTH=128
 
@@ -43,7 +43,7 @@ Running shell files: `bash run.sh predict`, and the contents of shell files are 
 DATA_DIR="data"
 
 MODEL_DIR="bert-base-chinese"
-OUTPUT_DIR="output/save_dict"
+OUTPUT_DIR="output/save_dict/"
 PREDICT_DIR="data/"
 MAX_LENGTH=128
 
