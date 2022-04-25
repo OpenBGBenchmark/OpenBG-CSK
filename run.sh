@@ -17,7 +17,6 @@ if [ $# == 0 ]; then
     --max_length=${MAX_LENGTH} \
     --batch_size=4 \
     --test_batch=2
-    --learning_rate=1e-5 \
     --epochs=10 \
     --seed=2021
 elif [ $1 == "predict" ]; then
@@ -28,7 +27,6 @@ elif [ $1 == "predict" ]; then
       --do_train=False \
       --max_length=${MAX_LENGTH} \
       --batch_size=16 \
-      --learning_rate=1e-5 \
       --epochs=10 \
       --seed=2021
 fi

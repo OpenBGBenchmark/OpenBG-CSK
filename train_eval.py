@@ -63,7 +63,7 @@ def evaluate(config, model, data_iter, test=True):
             pmi = model(input_ids, attention_mask, type_ids, position_ids)
             loss = F.binary_cross_entropy(pmi, labels.float(), reduction='sum')
             loss_total += loss.item()
-            bires = torch.where(pmi > 0.5, torch.tensor([1]).cuda(), torch.tensor([0]).cuda())
+            bires = torch.where(pmi > 0.5, torch.tensor([1]).to(config.device), torch.tensor([0]).to(config.device))
             for b, g, p, s in zip(bires, labels, pmi, sent):
                 all_bires.append(b.item())
                 predicts.append(p.item())
@@ -89,7 +89,7 @@ def predict(config, model, data_iter):
                 input_ids.to(config.device), attention_mask.to(config.device), type_ids.to(config.device)
             position_ids = position_ids.to(config.device)
             pmi = model(input_ids, attention_mask, type_ids, position_ids)
-            bires = torch.where(pmi > 0.5, torch.tensor([1]).cuda(), torch.tensor([0]).cuda())
+            bires = torch.where(pmi > 0.5, torch.tensor([1]).to(config.device), torch.tensor([0]).to(config.device))
             for b, t in zip(bires, triple_id):
                 predicts.append({"salience": b.item(), "triple_id": t})
     with open(config.save_path + "xx_result.jsonl", "w") as f:
