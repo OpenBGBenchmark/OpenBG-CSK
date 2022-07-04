@@ -12,7 +12,7 @@ import json
 PAD, CLS, SEP = '[PAD]', '[CLS]', '[SEP]'
 
 
-def load_dataset(path, config):
+def load_local_dataset(path, config):
     contents = []
     with open(path, 'r', encoding='UTF-8') as f:
         for line in tqdm(f):
@@ -24,19 +24,18 @@ def load_dataset(path, config):
             object = line_dict["object"]
             predicate = line_dict["predicate"]
             triple_id = line_dict["triple_id"]
-            raw_sent = SEP.join([subject, predicate, object])
             if "salience" in line_dict.keys():
                 salience = line_dict["salience"]
-                contents.append([raw_sent, triple_id, int(salience)])
+                contents.append([triple_id, subject, object, predicate, int(salience)])
             else:
-                contents.append([raw_sent, triple_id, 0])
+                contents.append([triple_id, 0])
     return contents
 
 
 def build_dataset(config):
-    train = load_dataset(config.train_path, config)
-    dev = load_dataset(config.dev_path, config)
-    test = load_dataset(config.test_path, config)
+    train = load_local_dataset(config.train_path, config)
+    dev = load_local_dataset(config.dev_path, config)
+    test = load_local_dataset(config.test_path, config)
     return train, dev, test
 
 
@@ -60,9 +59,13 @@ def get_time_dif(start_time):
     return timedelta(seconds=int(round(time_dif)))
 
 
-def gettoken(config, sent):
+def gettoken(config, subjects, objects, predicates):
     tokenizer = config.tokenizer
-    encode_result = tokenizer(sent, padding='max_length', truncation=True, max_length=config.max_length)
+    sents = []
+    for s, o, p in zip(subjects, objects, predicates):
+        raw_sent = SEP.join([s, p, o])
+        sents.append(raw_sent)
+    encode_result = tokenizer(sents, padding='max_length', truncation=True, max_length=config.max_length)
     input_ids = torch.tensor(encode_result['input_ids'])
     attention_mask = torch.tensor(encode_result['attention_mask'])
     type_ids = torch.tensor(encode_result['token_type_ids'])

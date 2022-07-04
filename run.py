@@ -5,8 +5,9 @@ from train_eval import train, test
 import random
 from bert import Model, Config
 import argparse
-from utils import build_dataset, build_iterator, get_time_dif, load_dataset, gettoken
-from torch.utils.data import TensorDataset, DataLoader
+from utils import build_dataset, build_iterator, get_time_dif, gettoken, load_local_dataset
+import datasets
+from torch.utils.data import DataLoader
 import torch
 import json
 
@@ -33,12 +34,14 @@ args = parser.parse_args()
 def train_entry():
     start_time = time.time()
     print("Loading data...")
-    train_data_all = load_dataset(config.train_path, config)
-    random.shuffle(train_data_all)
-    offset = int(len(train_data_all) * 0.1)
-    dev_data = train_data_all[:offset]
-    train_data = train_data_all[offset:]
-    test_data = load_dataset(config.test_path, config)
+    # train_data_all = load_dataset(config.train_path, config)
+    # train_data_all = dataset["train[:10%]"]
+    # offset = int(len(train_data_all) * 0.1)
+    dev_data = datasets.load_dataset("Yincen/SalienceEvaluation", split='train[:10%]')
+    train_data = datasets.load_dataset("Yincen/SalienceEvaluation", split='train[10%:]')
+    print(train_data)
+    print(dev_data)
+    test_data = load_local_dataset(config.test_path, config)
     train_iter = DataLoader(
         train_data,
         shuffle=True,
@@ -58,7 +61,7 @@ def train_entry():
 
 
 def test_entry():
-    test_data = load_dataset(config.test_path, config)
+    test_data = load_local_dataset(config.test_path, config)
     model = Model(config).to(config.device)
 
     model.load_state_dict(torch.load(config.save_path+"model.ckpt"))
@@ -66,8 +69,8 @@ def test_entry():
     loader = DataLoader(test_data, shuffle=False, batch_size=config.batch_size)
     predicts = []
     for i, batches in enumerate(loader):
-        sent, triple_id, _ = batches
-        input_ids, attention_mask, type_ids, position_ids = gettoken(config, sent)
+        triple_id, subject, object, predicate, label = batches
+        input_ids, attention_mask, type_ids, position_ids = gettoken(config, subject, object, predicate)
         input_ids, attention_mask, type_ids = \
             input_ids.to(config.device), attention_mask.to(config.device), type_ids.to(config.device)
         position_ids = position_ids.to(config.device)

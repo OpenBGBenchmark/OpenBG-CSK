@@ -22,8 +22,12 @@ def train(config, model, train_iter, dev_iter, test_iter):
         print('Epoch [{}/{}]'.format(epoch + 1, config.num_epochs))
         for i, batches in enumerate(train_iter):
             model.zero_grad()
-            sent, _, labels = batches
-            input_ids, attention_mask, type_ids, position_ids = gettoken(config, sent)
+            # _, subjects, objects, predicates, labels = batches
+            subjects,objects,predicates,labels = batches["subject"],batches["object"],batches["predicate"],batches["salience"]
+            input_ids, attention_mask, type_ids, position_ids = gettoken(config, subjects, objects, predicates)
+            labels = [float(x) for x in labels]
+            labels = np.asarray(labels)
+            labels = torch.from_numpy(labels)
             input_ids, attention_mask, type_ids, labels = \
                 input_ids.to(config.device), attention_mask.to(config.device), type_ids.to(config.device), labels.to(config.device)
             position_ids = position_ids.to(config.device)
@@ -54,8 +58,11 @@ def evaluate(config, model, data_iter, test=True):
     predicts, sents, grounds, all_bires = [], [], [], []
     with torch.no_grad():
         for i, batches in enumerate(data_iter):
-            sent, _, labels = batches
-            input_ids, attention_mask, type_ids, position_ids = gettoken(config,sent)
+            subjects,objects,predicates,labels = batches["subject"],batches["object"],batches["predicate"],batches["salience"]
+            labels = [float(x) for x in labels]
+            labels = np.asarray(labels)
+            labels = torch.from_numpy(labels)
+            input_ids, attention_mask, type_ids, position_ids = gettoken(config, subjects, objects, predicates)
             input_ids, attention_mask, type_ids, labels = \
                 input_ids.to(config.device), attention_mask.to(config.device), type_ids.to(config.device), labels.to(
                     config.device)
@@ -64,11 +71,10 @@ def evaluate(config, model, data_iter, test=True):
             loss = F.binary_cross_entropy(pmi, labels.float(), reduction='sum')
             loss_total += loss.item()
             bires = torch.where(pmi > 0.5, torch.tensor([1]).to(config.device), torch.tensor([0]).to(config.device))
-            for b, g, p, s in zip(bires, labels, pmi, sent):
+            for b, g, p in zip(bires, labels, pmi):
                 all_bires.append(b.item())
                 predicts.append(p.item())
                 grounds.append(g.item())
-                sents.append(s)
     print("test set size:", len(grounds))
     accuracy = metrics.accuracy_score(grounds, all_bires)
     p = metrics.precision_score(grounds, all_bires, zero_division=0)
@@ -83,8 +89,8 @@ def predict(config, model, data_iter):
     predicts = []
     with torch.no_grad():
         for i, batches in enumerate(data_iter):
-            sent, triple_id, _ = batches
-            input_ids, attention_mask, type_ids, position_ids = gettoken(config,sent)
+            triple_id, subject, object, predicate, label = batches
+            input_ids, attention_mask, type_ids, position_ids = gettoken(config, subject, object, predicate)
             input_ids, attention_mask, type_ids = \
                 input_ids.to(config.device), attention_mask.to(config.device), type_ids.to(config.device)
             position_ids = position_ids.to(config.device)
