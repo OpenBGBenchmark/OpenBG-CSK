@@ -12,10 +12,15 @@ class Config(object):
         self.rank = -1
         self.local_rank = -1
         self.train_path = args.data_dir + '/train_triple.jsonl'  # 训练集
-        self.test_path = args.data_dir + '/dev_triple.jsonl'  # 测试集
+        self.test_path = args.data_dir + '/OpenBG-CSK_test.jsonl'  # 测试集
         self.save_path = args.output_dir  # 模型训练结果
         self.bert_path = args.model_dir
         self.test_batch = args.test_batch
+        self.a_new_tokens = args.a_new_tokens
+        self.b_new_tokens = args.b_new_tokens
+        self.new_tokens = 4 * self.a_new_tokens + 2 * self.b_new_tokens
+        self.lamda = args.lamda
+
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')   # 设备
         self.num_workers = 1
         self.local_rank = -1

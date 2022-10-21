@@ -21,11 +21,13 @@ MODEL_DIR="bert-base-chinese"
 OUTPUT_DIR="output/save_dict/"
 PREDICT_DIR="data/"
 MAX_LENGTH=128
+MODEL_TYPE="PMI"
 
 python run.py \
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
-    --output_dir=${OUTPUT_DIR} \
+    --model=${MODEL_DIR}
+    --output_dir=${MODEL_TYPE} \
     --do_train=True \
     --max_length=${MAX_LENGTH} \
     --batch_size=16 \
@@ -45,12 +47,14 @@ MODEL_DIR="bert-base-chinese"
 OUTPUT_DIR="output/save_dict/"
 PREDICT_DIR="data/"
 MAX_LENGTH=128
+MODEL_TYPE="PMI"
+
 
 python run.py \
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
     --output_dir=${OUTPUT_DIR} \
-    --do_train=False \
+    --model=${MODEL_DIR}
     --max_length=${MAX_LENGTH} \
     --batch_size=16 \
     --learning_rate=1e-5 \
@@ -73,9 +77,12 @@ python run.py \
 | ------------------ | --------- | --------- |
 | [BERT-base](https://huggingface.co/bert-base-chinese)          | 55.2 | 55.8 |
 | [RoBERTa-wwm-ext-base](https://huggingface.co/hfl/chinese-roberta-wwm-ext)| 56.9 | 57.2|
+| PMI-tuning | 60.7 | 61.1 |
 
 KG-BERT将 头实体h，关系r，尾实体t 的文本作为双向编码器（例如bert）的输入，并且使用语言模型计算该三元组的得分。
 具体而言，模型的输入是以下的格式，将h, r, t 拼接成 [CLS] h [SEP] r [SEP] t [SEP] 的格式。最终使用 权重W 对应的分类器对 [CLS] 相对的输出结果进行打分。
+
+PMI-tuning 方法见论文。
 
 我们列出了在基线实验期间的超参数如下：
 
