@@ -93,3 +93,33 @@ PMI-tuning 方法见论文。
 |   weight_decay    | 0.01  |
 |   learning_rate   | 1e-5  |
 
+# 引用
+
+如果您使用了以上代码烦请引用以下论文:
+
+
+```bibtex
+@article{DBLP:journals/corr/abs-2205-10843,
+  author    = {Yincen Qu and
+               Ningyu Zhang and
+               Hui Chen and
+               Zelin Dai and
+               Zezhong Xu and
+               Chengming Wang and
+               Xiaoyu Wang and
+               Qiang Chen and
+               Huajun Chen},
+  title     = {Commonsense Knowledge Salience Evaluation with a Benchmark Dataset
+               in E-commerce},
+  journal   = {CoRR},
+  volume    = {abs/2205.10843},
+  year      = {2022},
+  url       = {https://doi.org/10.48550/arXiv.2205.10843},
+  doi       = {10.48550/arXiv.2205.10843},
+  eprinttype = {arXiv},
+  eprint    = {2205.10843},
+  timestamp = {Mon, 30 May 2022 15:47:29 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-2205-10843.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
