@@ -26,7 +26,7 @@ MODEL_TYPE="PMI"
 python run.py \
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
-    --model=${MODEL_DIR}
+    --model=${MODEL_TYPE} \
     --output_dir=${MODEL_TYPE} \
     --do_train=True \
     --max_length=${MAX_LENGTH} \
@@ -54,7 +54,7 @@ python run.py \
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
     --output_dir=${OUTPUT_DIR} \
-    --model=${MODEL_DIR}
+    --model=${MODEL_TYPE} \
     --max_length=${MAX_LENGTH} \
     --batch_size=16 \
     --learning_rate=1e-5 \
