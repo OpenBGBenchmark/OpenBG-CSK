@@ -14,7 +14,7 @@ if [ $# == 0 ]; then
     --data_dir=${DATA_DIR} \
     --model_dir=${MODEL_DIR} \
     --output_dir=${OUTPUT_DIR} \
-    --model=${MODEL_DIR}
+    --model=${MODEL_TYPE} \
     --do_train=True \
     --max_length=${MAX_LENGTH} \
     --batch_size=4 \
@@ -26,7 +26,7 @@ elif [ $1 == "predict" ]; then
       --data_dir=${DATA_DIR} \
       --model_dir=${MODEL_DIR} \
       --output_dir=${OUTPUT_DIR} \
-      --model=${MODEL_DIR}
+      --model=${MODEL_TYPE} \
       --do_train=False \
       --max_length=${MAX_LENGTH} \
       --batch_size=16 \
